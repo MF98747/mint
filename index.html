@@ -1,0 +1,882 @@
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="环境微生物实验室教学与操作学习页面，包含课程框架、SOP速查、安全应急、练习考核与本地智能问答。">
+  <title>环境微生物实验室助手 | 教育版</title>
+  <style>
+    :root {
+      --bg: #f7fafc;
+      --paper: #ffffff;
+      --ink: #1f2937;
+      --sub: #64748b;
+      --primary: #0f766e;
+      --primary-soft: #ccfbf1;
+      --accent: #2563eb;
+      --line: #e2e8f0;
+      --warn: #b45309;
+      --danger: #dc2626;
+      --ok: #15803d;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 0%, #e0f2fe 0%, #f7fafc 28%),
+        linear-gradient(180deg, #f8fafc 0%, #f7fafc 100%);
+      line-height: 1.6;
+    }
+
+    .container {
+      width: min(1180px, 94%);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+    .topbar-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+    }
+    .logo {
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 0.5px;
+    }
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .menu a {
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 6px 10px;
+    }
+    .menu a:hover {
+      background: var(--primary-soft);
+      border-color: #99f6e4;
+    }
+    .menu a:focus-visible,
+    .tab-btn:focus-visible,
+    .btn:focus-visible,
+    .tag-btn:focus-visible,
+    .field:focus-visible,
+    .quiz-choice:focus-visible {
+      outline: 2px solid #0d9488;
+      outline-offset: 2px;
+    }
+
+    .hero {
+      margin: 22px 0 14px;
+      padding: 24px;
+      border-radius: 18px;
+      color: #fff;
+      background: linear-gradient(135deg, #0f766e 0%, #0d9488 42%, #14b8a6 100%);
+      box-shadow: 0 10px 28px rgba(15, 118, 110, 0.25);
+    }
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+    .hero p {
+      margin: 0;
+      opacity: 0.95;
+      max-width: 960px;
+    }
+    .pill-row {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .pill {
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .section {
+      margin: 24px 0;
+      scroll-margin-top: 72px;
+    }
+    .section h2 {
+      margin: 0 0 6px;
+      font-size: 24px;
+    }
+    .muted {
+      color: var(--sub);
+      font-size: 14px;
+      margin: 0 0 12px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+    }
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+    .card ul {
+      margin: 6px 0 0 18px;
+      padding: 0;
+    }
+
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 14px;
+    }
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .tab-btn {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .tab-btn.active {
+      background: var(--primary-soft);
+      border-color: #5eead4;
+      color: #115e59;
+      font-weight: 700;
+    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    .checklist label {
+      display: block;
+      border: 1px dashed #cbd5e1;
+      border-radius: 10px;
+      padding: 8px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      background: #f8fafc;
+      cursor: pointer;
+    }
+    .progress {
+      height: 10px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #14b8a6, #22c55e);
+      transition: width 0.25s;
+    }
+
+    .toolbox {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .box {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+    }
+    .box h4 { margin: 0 0 8px; font-size: 16px; }
+    input, select, button {
+      font: inherit;
+    }
+    .field {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .btn {
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .result-list .item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      background: #f8fafc;
+      font-size: 14px;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+    }
+    summary {
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      margin: 10px 0;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      padding: 9px 10px;
+      font-size: 14px;
+    }
+    th {
+      background: #f0fdfa;
+      color: #115e59;
+    }
+    tr:last-child td { border-bottom: none; }
+
+    .badge {
+      font-size: 12px;
+      border-radius: 999px;
+      padding: 2px 8px;
+      margin-right: 6px;
+      display: inline-block;
+    }
+    .b-ok { background: #dcfce7; color: var(--ok); }
+    .b-warn { background: #ffedd5; color: var(--warn); }
+    .b-danger { background: #fee2e2; color: var(--danger); }
+
+    .quiz-choices {
+      display: grid;
+      gap: 8px;
+      margin: 8px 0;
+    }
+    .quiz-choice {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      cursor: pointer;
+      background: #fff;
+    }
+    .quiz-choice:hover { background: #f8fafc; }
+    .quiz-choice.correct { border-color: #4ade80; background: #f0fdf4; }
+    .quiz-choice.wrong { border-color: #f87171; background: #fef2f2; }
+
+    .agent-wrap {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 12px;
+    }
+    .agent-chat {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      min-height: 320px;
+      padding: 10px;
+      overflow-y: auto;
+    }
+    .msg {
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+    .msg-user {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+    }
+    .msg-agent {
+      background: #f0fdfa;
+      border: 1px solid #99f6e4;
+    }
+    .agent-input {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .agent-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .tag-btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .tag-btn:hover {
+      background: var(--primary-soft);
+    }
+    .mt0 { margin-top: 0; }
+    .result-list { margin-top: 10px; }
+    footer {
+      color: var(--sub);
+      text-align: center;
+      font-size: 13px;
+      margin: 28px 0 38px;
+    }
+
+    @media (max-width: 960px) {
+      .edu-grid { grid-template-columns: 1fr; }
+      .toolbox { grid-template-columns: 1fr; }
+      .agent-wrap { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .topbar-inner { flex-direction: column; align-items: flex-start; }
+      .hero h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="logo">环境微生物实验室助手 · 教学版</div>
+      <nav class="menu">
+        <a href="#framework">课程框架</a>
+        <a href="#focus">重点领域</a>
+        <a href="#tool">功能细化</a>
+        <a href="#knowledge">知识库</a>
+        <a href="#safety">安全与应急</a>
+        <a href="#quiz">练习考核</a>
+        <a href="#agent">智能体Agent</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>环境微生物实验室操作学习中心</h1>
+      <p>以“教学 + 操作 + 安全”三位一体设计，支持仪器查询、SOP学习、知识检索、应急流程与课堂式考核，适合新手培训与实验室日常规范化管理。</p>
+      <div class="pill-row">
+        <span class="pill">安全第一</span>
+        <span class="pill">标准SOP</span>
+        <span class="pill">分级学习</span>
+        <span class="pill">可视化检索</span>
+      </div>
+    </section>
+
+    <section id="framework" class="section">
+      <h2>教育化课程框架</h2>
+      <p class="muted">从“基础认知 → 标准操作 → 质量控制 → 安全应急”形成完整学习闭环。</p>
+      <div class="cards">
+        <article class="card">
+          <h3>模块A：仪器认知</h3>
+          <ul>
+            <li>仪器用途与风险级别</li>
+            <li>开机检查清单</li>
+            <li>日常维护与异常处理</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>模块B：标准操作SOP</h3>
+          <ul>
+            <li>培养、接种、鉴定、计数流程</li>
+            <li>关键步骤提示与易错点</li>
+            <li>批次质量控制要点</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>模块C：生物安全</h3>
+          <ul>
+            <li>BSL等级对应防护要求</li>
+            <li>暴露、洒漏、故障应急</li>
+            <li>废弃物分类处置</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>模块D：课堂评估</h3>
+          <ul>
+            <li>自测问答与判题反馈</li>
+            <li>学习进度可视化</li>
+            <li>重点知识复习入口</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="focus" class="section">
+      <h2>重点领域细化（分层学习）</h2>
+      <div class="edu-grid">
+        <div class="panel">
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="tab1">培养技术</button>
+            <button class="tab-btn" data-tab="tab2">鉴定方法</button>
+            <button class="tab-btn" data-tab="tab3">计数检测</button>
+            <button class="tab-btn" data-tab="tab4">保藏技术</button>
+            <button class="tab-btn" data-tab="tab5">无菌规范</button>
+          </div>
+
+          <div id="tab1" class="tab-pane active">
+            <p><strong>入门：</strong>掌握培养基配制、分装、灭菌条件。</p>
+            <p><strong>进阶：</strong>按目标菌种选择平板划线、涂布、穿刺、液体接种法。</p>
+            <p><strong>考核点：</strong>121°C灭菌参数、倾注平板温度、污染控制。</p>
+          </div>
+          <div id="tab2" class="tab-pane">
+            <p><strong>入门：</strong>菌落形态学描述、显微镜基础观察。</p>
+            <p><strong>进阶：</strong>革兰氏染色、抗酸染色、生化试验组合判读。</p>
+            <p><strong>考核点：</strong>脱色时长控制、假阴性/假阳性成因分析。</p>
+          </div>
+          <div id="tab3" class="tab-pane">
+            <p><strong>入门：</strong>10倍梯度稀释和有效计数区间（30-300）。</p>
+            <p><strong>进阶：</strong>MPN查表、浊度标准曲线应用。</p>
+            <p><strong>考核点：</strong>CFU计算与平行样本一致性。</p>
+          </div>
+          <div id="tab4" class="tab-pane">
+            <p><strong>入门：</strong>短期4°C保藏和传代节律。</p>
+            <p><strong>进阶：</strong>冻干与液氮保藏参数及复苏流程。</p>
+            <p><strong>考核点：</strong>保护剂浓度、双份备份机制。</p>
+          </div>
+          <div id="tab5" class="tab-pane">
+            <p><strong>入门：</strong>实验服、手套、口罩标准穿戴。</p>
+            <p><strong>进阶：</strong>超净台/生物安全柜操作边界与气流保护区。</p>
+            <p><strong>考核点：</strong>开盖时长、接种环灭菌完整性、交叉污染控制。</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 class="mt0">学习进度清单</h3>
+          <p class="muted">完成勾选后自动计算学习进度。</p>
+          <div class="checklist" id="learnChecklist">
+            <label><input type="checkbox"> 已掌握培养基配制与灭菌参数</label>
+            <label><input type="checkbox"> 已掌握平板划线与涂布接种</label>
+            <label><input type="checkbox"> 已掌握革兰氏染色判读</label>
+            <label><input type="checkbox"> 已掌握CFU与MPN计算逻辑</label>
+            <label><input type="checkbox"> 已掌握菌液洒漏应急流程</label>
+          </div>
+          <div class="progress"><div class="progress-bar" id="learnBar"></div></div>
+          <p class="muted" id="learnText">当前进度：0%</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="tool" class="section">
+      <h2>功能更加细化（可交互）</h2>
+      <p class="muted">支持“仪器检索”和“SOP场景检索”，便于按任务快速定位信息。</p>
+      <div class="toolbox">
+        <div class="box">
+          <h4>仪器查询助手</h4>
+          <input class="field" id="instInput" placeholder="输入仪器名，如：高压灭菌锅 / 生物安全柜">
+          <button class="btn" id="instBtn">查询仪器</button>
+          <div class="result-list" id="instResult" aria-live="polite"></div>
+        </div>
+        <div class="box">
+          <h4>SOP场景筛选</h4>
+          <select class="field" id="sopType">
+            <option value="">请选择实验类型</option>
+            <option value="培养">培养</option>
+            <option value="鉴定">鉴定</option>
+            <option value="计数">计数检测</option>
+            <option value="保藏">保藏</option>
+            <option value="无菌">无菌操作</option>
+          </select>
+          <button class="btn" id="sopBtn">查看SOP要点</button>
+          <div class="result-list" id="sopResult" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="knowledge" class="section">
+      <h2>专业知识库（教育化整理）</h2>
+
+      <details open>
+        <summary>常见微生物与培养特征</summary>
+        <table>
+          <thead>
+            <tr>
+              <th>菌种</th>
+              <th>染色与形态</th>
+              <th>培养条件</th>
+              <th>教学要点</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>大肠杆菌</td><td>G-杆菌</td><td>37°C，需氧</td><td>指示菌，IMViC组合练习</td></tr>
+            <tr><td>金黄色葡萄球菌</td><td>G+球菌（葡萄状）</td><td>37°C，需氧</td><td>触酶+，凝固酶+判读</td></tr>
+            <tr><td>铜绿假单胞菌</td><td>G-杆菌</td><td>37°C，需氧</td><td>氧化酶试验与色素观察</td></tr>
+            <tr><td>乳酸菌</td><td>G+杆/球</td><td>30-37°C，微需氧</td><td>益生功能与发酵应用</td></tr>
+            <tr><td>双歧杆菌</td><td>G+Y形杆菌</td><td>37°C，厌氧</td><td>严格厌氧培养技巧</td></tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details>
+        <summary>培养基配方速查（节选）</summary>
+        <table>
+          <thead>
+            <tr>
+              <th>培养基</th>
+              <th>核心配方（1000 mL）</th>
+              <th>应用场景</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>LB</td><td>胰蛋白胨10g、酵母提取物5g、NaCl 10g</td><td>细菌常规扩增</td></tr>
+            <tr><td>营养琼脂</td><td>蛋白胨10g、牛肉膏3g、NaCl 5g、琼脂15-20g</td><td>基础分离培养</td></tr>
+            <tr><td>麦康凯</td><td>乳糖、胆盐、中性红、结晶紫</td><td>肠道G-选择分离</td></tr>
+            <tr><td>EMB</td><td>乳糖、伊红Y、美蓝、琼脂</td><td>大肠菌群筛查</td></tr>
+            <tr><td>PDA</td><td>马铃薯汁、葡萄糖20g、琼脂15-20g</td><td>真菌培养</td></tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details>
+        <summary>染色与药敏关键知识</summary>
+        <p><span class="badge b-warn">革兰氏染色关键</span>结晶紫1 min → 碘液1 min → 95%乙醇脱色约30 s → 番红1 min。</p>
+        <p><span class="badge b-danger">常见错误</span>菌龄过老、涂片过厚、脱色不当导致假结果。</p>
+        <p><span class="badge b-ok">药敏试验</span>0.5麦氏比浊涂布MH平板，35°C 16-18 h测抑菌圈，按S/I/R判定。</p>
+      </details>
+    </section>
+
+    <section id="safety" class="section">
+      <h2>安全与应急模块</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>安全等级与防护</h3>
+          <p><span class="badge b-ok">BSL-1</span>基础防护，规范操作即可。</p>
+          <p><span class="badge b-warn">BSL-2</span>必须在生物安全柜内进行高风险步骤。</p>
+          <p><span class="badge b-danger">BSL-3/4</span>仅在授权设施与体系下开展。</p>
+        </article>
+        <article class="card">
+          <h3>菌液洒漏流程</h3>
+          <ol>
+            <li>划定污染区域并提醒人员撤离。</li>
+            <li>覆盖吸附材料，外向内喷洒消毒剂。</li>
+            <li>作用30分钟后按感染性废物收集。</li>
+            <li>完成终末消毒与事件记录上报。</li>
+          </ol>
+        </article>
+        <article class="card">
+          <h3>意外暴露处理</h3>
+          <ul>
+            <li>皮肤暴露：流水冲洗并消毒。</li>
+            <li>黏膜暴露：生理盐水反复冲洗。</li>
+            <li>针刺伤：挤压出血、冲洗、上报并医学评估。</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="quiz" class="section">
+      <h2>课堂练习与即时反馈</h2>
+      <p class="muted">示例题：单选后可立即查看反馈，便于培训考核。</p>
+      <div class="panel">
+        <h3 class="mt0">问题：平板计数法中推荐的有效菌落数范围是？</h3>
+        <div class="quiz-choices" id="quizChoices">
+          <div class="quiz-choice" data-ok="false" role="button" tabindex="0">A. 5-20</div>
+          <div class="quiz-choice" data-ok="true" role="button" tabindex="0">B. 30-300</div>
+          <div class="quiz-choice" data-ok="false" role="button" tabindex="0">C. 300-1000</div>
+          <div class="quiz-choice" data-ok="false" role="button" tabindex="0">D. 任意数量都可以</div>
+        </div>
+        <p id="quizResult" class="muted">请选择一个答案。</p>
+      </div>
+    </section>
+
+    <section id="agent" class="section">
+      <h2>智能体 Agent 中控台</h2>
+      <p class="muted">可直接提问仪器、SOP、安全与知识库问题，Agent 会根据关键词给出结构化建议。</p>
+      <div class="agent-wrap">
+        <div class="panel">
+          <div id="agentChat" class="agent-chat"></div>
+          <div class="agent-input">
+            <input id="agentInput" class="field" placeholder="例如：高压灭菌锅操作流程是什么？">
+            <button id="agentSend" class="btn">发送</button>
+          </div>
+          <div class="agent-tags">
+            <button class="tag-btn" data-q="超净工作台怎么使用？">超净工作台</button>
+            <button class="tag-btn" data-q="革兰氏染色的步骤和注意事项">革兰氏染色</button>
+            <button class="tag-btn" data-q="菌液洒漏后如何应急处理？">菌液洒漏应急</button>
+            <button class="tag-btn" data-q="大肠杆菌培养条件是什么？">大肠杆菌培养</button>
+          </div>
+        </div>
+        <div class="panel">
+          <h3 class="mt0">Agent 服务能力</h3>
+          <ul>
+            <li>仪器查询：用途、参数、操作步骤、维护建议</li>
+            <li>SOP指导：按实验类型给出标准流程与关键点</li>
+            <li>安全提醒：PPE、BSL等级、常见风险提示</li>
+            <li>应急处置：洒漏、暴露、故障流程速查</li>
+          </ul>
+          <p><span class="badge b-warn">说明</span>当前为本地规则智能体版本，适合培训、教学和离线演示。</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    微生物实验室助手（教育风格增强版） · 安全第一 · 规范优先 · 实用导向
+  </footer>
+
+  <script>
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const tabPanes = document.querySelectorAll(".tab-pane");
+    tabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        tabButtons.forEach((b) => b.classList.remove("active"));
+        tabPanes.forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    const checklist = document.querySelectorAll("#learnChecklist input[type='checkbox']");
+    const learnBar = document.getElementById("learnBar");
+    const learnText = document.getElementById("learnText");
+    const progressStoreKey = "labLearnChecklistStateV1";
+    function loadProgress() {
+      const raw = localStorage.getItem(progressStoreKey);
+      if (!raw) return;
+      try {
+        const state = JSON.parse(raw);
+        checklist.forEach((box, index) => {
+          box.checked = Boolean(state[index]);
+        });
+      } catch (_) {
+        localStorage.removeItem(progressStoreKey);
+      }
+    }
+    function saveProgress() {
+      const state = Array.from(checklist).map((box) => box.checked);
+      localStorage.setItem(progressStoreKey, JSON.stringify(state));
+    }
+    function updateProgress() {
+      const checked = Array.from(checklist).filter((x) => x.checked).length;
+      const total = checklist.length;
+      const pct = Math.round((checked / total) * 100);
+      learnBar.style.width = pct + "%";
+      learnText.textContent = "当前进度：" + pct + "%";
+      saveProgress();
+    }
+    checklist.forEach((box) => box.addEventListener("change", updateProgress));
+    loadProgress();
+    updateProgress();
+
+    const instrumentDB = [
+      {
+        key: "生物安全柜",
+        text: "用途：高风险样本操作；要点：开机风机稳定后操作，前窗18-20cm，物品置后1/3区域，结束后继续运行5分钟并消毒。"
+      },
+      {
+        key: "高压灭菌锅",
+        text: "用途：培养基和器具灭菌；要点：排尽冷空气后计时，常规121°C 15-20 min，确认压力回零后再开盖。"
+      },
+      {
+        key: "超净工作台",
+        text: "用途：无菌操作；要点：提前紫外30分钟，台面75%酒精擦拭，减少快速动作与交叉摆放。"
+      },
+      {
+        key: "离心机",
+        text: "用途：样本分离；要点：对称配平、盖紧转头、设定转速时间，异常振动立即停机。"
+      },
+      {
+        key: "PCR仪",
+        text: "用途：核酸扩增；要点：反应体系冰上配制，分区防污染，设置退火温度与循环参数。"
+      }
+    ];
+
+    const sopDB = {
+      "培养": ["1) 按配方配制培养基", "2) 调pH并分装", "3) 灭菌后冷却至适温", "4) 规范接种并培养"],
+      "鉴定": ["1) 先做菌落与显微观察", "2) 进行染色判读", "3) 结合生化试验", "4) 必要时做分子鉴定"],
+      "计数": ["1) 10倍梯度稀释", "2) 选择30-300菌落平板", "3) 平行样重复", "4) 计算CFU并记录"],
+      "保藏": ["1) 确认纯度与活性", "2) 选择短/中/长期方案", "3) 添加保护剂", "4) 建立编号与双份备份"],
+      "无菌": ["1) 环境与器具消毒", "2) 穿戴PPE", "3) 接种环前后灭菌", "4) 减少开盖时长并及时封口"]
+    };
+
+    const instInput = document.getElementById("instInput");
+    const instBtn = document.getElementById("instBtn");
+    const instResult = document.getElementById("instResult");
+    function runInstrumentSearch() {
+      const kw = instInput.value.trim();
+      instResult.innerHTML = "";
+      const query = kw.toLowerCase();
+      const matches = instrumentDB.filter((x) => x.key.toLowerCase().includes(query) || (!query));
+      if (!matches.length) {
+        instResult.innerHTML = "<div class='item'>未找到匹配仪器，请尝试关键词：生物安全柜 / 高压灭菌锅 / 超净工作台 / 离心机 / PCR仪</div>";
+        return;
+      }
+      matches.forEach((m) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.textContent = m.key + " - " + m.text;
+        instResult.appendChild(div);
+      });
+    }
+    instBtn.addEventListener("click", runInstrumentSearch);
+    instInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") runInstrumentSearch();
+    });
+
+    const sopType = document.getElementById("sopType");
+    const sopBtn = document.getElementById("sopBtn");
+    const sopResult = document.getElementById("sopResult");
+    function runSopSearch() {
+      sopResult.innerHTML = "";
+      const key = sopType.value;
+      if (!key) {
+        sopResult.innerHTML = "<div class='item'>请先选择实验类型。</div>";
+        return;
+      }
+      sopDB[key].forEach((line) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.textContent = line;
+        sopResult.appendChild(div);
+      });
+    }
+    sopBtn.addEventListener("click", runSopSearch);
+
+    const choices = document.querySelectorAll(".quiz-choice");
+    const quizResult = document.getElementById("quizResult");
+    function handleChoice(c) {
+      choices.forEach((x) => x.classList.remove("correct", "wrong"));
+      const ok = c.dataset.ok === "true";
+      c.classList.add(ok ? "correct" : "wrong");
+      quizResult.textContent = ok
+        ? "回答正确：30-300是平板计数的常用有效区间。"
+        : "回答不正确：建议复习平板计数有效区间（30-300）与稀释梯度设计。";
+    }
+    choices.forEach((c) => {
+      c.addEventListener("click", () => handleChoice(c));
+      c.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleChoice(c);
+        }
+      });
+    });
+
+    const agentChat = document.getElementById("agentChat");
+    const agentInput = document.getElementById("agentInput");
+    const agentSend = document.getElementById("agentSend");
+    const quickBtns = document.querySelectorAll(".tag-btn");
+
+    function addMsg(role, text) {
+      const div = document.createElement("div");
+      div.className = "msg " + (role === "user" ? "msg-user" : "msg-agent");
+      div.textContent = (role === "user" ? "你：\n" : "实验室Agent：\n") + text;
+      agentChat.appendChild(div);
+      agentChat.scrollTop = agentChat.scrollHeight;
+    }
+
+    function getAgentReply(raw) {
+      const q = raw.toLowerCase();
+
+      if (q.includes("高压灭菌锅") || q.includes("灭菌锅")) {
+        return "【高压灭菌锅操作】\n1) 检查水位、密封圈和排气阀；\n2) 装载物品不超过容积2/3并留蒸汽通道；\n3) 先排尽冷空气再开始计时；\n4) 常规灭菌参数121°C，15-20分钟；\n5) 压力回零后再开盖，防止喷溅烫伤。\n【安全提醒】取放物品必须戴耐热手套。";
+      }
+
+      if (q.includes("超净工作台") || q.includes("生物安全柜")) {
+        return "【洁净操作要点】\n- 使用前紫外照射30分钟，台面75%酒精擦拭；\n- 保持工作区整洁，物品分区摆放，避免阻挡气流；\n- 减少大幅度动作和频繁开关窗；\n- 结束后继续运行风机5分钟并终末消毒。";
+      }
+
+      if (q.includes("革兰") || q.includes("染色")) {
+        return "【革兰氏染色流程】\n结晶紫1分钟 → 碘液1分钟 → 95%乙醇脱色约30秒 → 番红1分钟。\n【结果判读】G+紫色，G-红色。\n【易错点】菌龄过老、涂片过厚、脱色过度或不足。";
+      }
+
+      if (q.includes("培养条件") || q.includes("大肠杆菌")) {
+        return "【大肠杆菌培养条件】\n- 温度：37°C；\n- 气体：需氧/兼性厌氧环境可生长；\n- 常规培养时间：18-24小时；\n- 常用培养基：LB、营养琼脂。\n【质控建议】设置阴阳性对照并记录批次信息。";
+      }
+
+      if (q.includes("菌液洒漏") || q.includes("洒漏") || q.includes("应急")) {
+        return "【菌液洒漏应急】\n1) 警示并隔离污染区域；\n2) 覆盖吸附材料，外向内加消毒剂；\n3) 作用30分钟后按感染性废弃物收集；\n4) 终末消毒与事件上报；\n5) 如有暴露，立即冲洗并进行医学评估。";
+      }
+
+      if (q.includes("药敏") || q.includes("kirby") || q.includes("抑菌圈")) {
+        return "【纸片扩散法（K-B）】\n- 菌悬液调至0.5麦氏比浊；\n- 均匀涂布MH平板后贴药敏纸片；\n- 35°C培养16-18小时；\n- 测抑菌圈并按S/I/R判定。\n【质控菌株】E. coli ATCC 25922，S. aureus ATCC 25923。";
+      }
+
+      return "我可以帮你处理这四类问题：\n1) 仪器操作与维护；\n2) SOP流程与质控；\n3) 安全规范与应急处置；\n4) 知识库速查（培养基、染色、药敏）。\n你可以具体问：'高压灭菌锅操作流程' 或 '革兰氏染色易错点'。";
+    }
+
+    function askAgent(question) {
+      const text = question.trim();
+      if (!text) return;
+      addMsg("user", text);
+      const reply = getAgentReply(text);
+      setTimeout(() => {
+        addMsg("agent", reply);
+      }, 150);
+    }
+
+    addMsg("agent", "你好，我是微生物实验室智能体。你可以问我：仪器操作、SOP流程、安全提醒和应急处理。");
+
+    agentSend.addEventListener("click", () => {
+      askAgent(agentInput.value);
+      agentInput.value = "";
+      agentInput.focus();
+    });
+
+    agentInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        askAgent(agentInput.value);
+        agentInput.value = "";
+      }
+    });
+
+    quickBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const q = btn.dataset.q || "";
+        askAgent(q);
+      });
+    });
+  </script>
+</body>
+</html>
